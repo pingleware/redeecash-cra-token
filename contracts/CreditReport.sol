@@ -16,7 +16,7 @@ contract CreditReport {
 
   struct ReportItem {
     address subscriber;
-    Item    item;
+    bytes   item;
   }
 
   struct Inquiry {
@@ -40,6 +40,9 @@ contract CreditReport {
   mapping(address => uint256) private consumers;
   mapping(address => Inquiry[]) private inquiries;
   mapping(address => Dispute[]) private disputes;
+
+  address[] private _subscribers;
+  address[] private _consumers;
 
   uint total_consumers = 0;
 
@@ -83,8 +86,30 @@ contract CreditReport {
     _;
   }
 
+  modifier alreadySubscriber(address addr) {
+    bool found = false;
+    for (uint i = 0; i < _subscribers.length; i++) {
+      if (_subscribers[i] == addr) {
+        found = true;
+      }
+    }
+    require(found == false, "user is already a subscriber");
+    _;
+  }
+
+  modifier alreadyConsumer(address addr) {
+    bool found = false;
+    for (uint i = 0; i < _consumers.length; i++) {
+      if (_consumers[i] == addr) {
+        found = true;
+      }
+    }
+    require(found == false, "user is already a consumer");
+    _;
+  }
+
   modifier requiresFee(uint fee) {
-    require(msg.value < fee, "insufficient balance/amount");
+    require(msg.sender.balance > fee, "insufficient balance/amount");
     _;
   }
 
@@ -105,10 +130,30 @@ contract CreditReport {
   function addSubscriber(address addr, uint256 _type)
   public
   onlyOwner
+  alreadySubscriber(addr)
   {
     require(addr != ZERO_ADDRESS,"missing address");
     subscribers[addr] = _type;
+    _subscribers.push(addr);
     emit SubscriberAdded(addr, "subscriber added");
+  }
+
+  function getSubscribers()
+  public
+  view
+  onlyOwner
+  returns (address[] memory)
+  {
+    return _subscribers;
+  }
+
+  function getConsumers()
+  public
+  view
+  onlyOwner
+  returns (address[] memory)
+  {
+    return _consumers;
   }
 
   /**
@@ -117,23 +162,15 @@ contract CreditReport {
    */
   function addConsumerItem(address consumer, bytes memory item)
     public
-    payable
     onlySubscriber
   {
+    require(consumer != ZERO_ADDRESS,"missing address");
     if (consumers[consumer] == 0) {
       consumers[consumer] = 1;
+      _consumers.push(consumer);
       total_consumers++;
     }
-    string memory _opendate;
-    string memory _description;
-    uint    _amount;
-    uint    _balance;
-    uint    _limit;
-    string memory _paystatus;
-
-    (_opendate, _description, _amount, _balance, _limit, _paystatus) = abi.decode(item, (string,string,uint,uint,uint,string));
-    Item memory _item = Item(_opendate, _description, _amount, _balance, _limit, _paystatus);
-    ReportItem memory ritem = ReportItem(msg.sender,_item);
+    ReportItem memory ritem = ReportItem(msg.sender, item);
     reports[consumer].push(ritem);
   }
 
@@ -148,7 +185,7 @@ contract CreditReport {
     requiresFee(0.001 ether)
     returns (string memory)
   {
-    to.transfer(msg.value);
+    //to.transfer(0.001 ether);
     Inquiry memory inquiry = Inquiry(msg.sender, block.timestamp);
     inquiries[consumer].push(inquiry);
     return _report(consumer);
@@ -182,12 +219,7 @@ contract CreditReport {
           report.subscriber,
           msg.sender,
           disputeDate,
-          report.item.opendate,
-          report.item.description,
-          report.item.amount,
-          report.item.balance,
-          report.item.limit,
-          report.item.paystatus,
+          report.item,
           reason
         )
       )
@@ -323,12 +355,7 @@ contract CreditReport {
       output = string(abi.encodePacked(
         output, "[",
           reports[consumer][i].subscriber, ",",
-          reports[consumer][i].item.opendate, ",",
-          reports[consumer][i].item.description, ",",
-          reports[consumer][i].item.amount, ",",
-          reports[consumer][i].item.balance, ",",
-          reports[consumer][i].item.limit, ",",
-          reports[consumer][i].item.paystatus,
+          reports[consumer][i].item, ",",
         "]"
       ));
     }
