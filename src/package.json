@@ -1,0 +1,24 @@
+{
+  "name": "cra",
+  "version": "1.0.0",
+  "description": "A DAPP for the Credit Report Agemcy token",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ."
+  },
+  "keywords": [],
+  "author": "PressPage Entertainment Inc DBA RedeeCash",
+  "maintainers": [
+    {
+      "name": "PressPage Entertainment Inc DBA PINGLEWARE"
+    },
+    {
+      "name": "Patrick O. Ingle"
+    }
+  ],
+  "license": "CC-BY-4.0",
+  "dependencies": {
+    "web3": "^1.6.1"
+  }
+}
