@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ."
+    "start": "electron ."
   },
   "keywords": [],
   "author": "PressPage Entertainment Inc DBA RedeeCash",
@@ -19,6 +19,10 @@
   ],
   "license": "CC-BY-4.0",
   "dependencies": {
+    "path": "^0.12.7",
     "web3": "^1.6.1"
+  },
+  "devDependencies": {
+    "electron": "^16.0.4"
   }
 }

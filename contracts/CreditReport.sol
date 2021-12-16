@@ -21,7 +21,7 @@ contract CreditReport {
 
   struct Inquiry {
     address subscriber;
-    uint256 reqdate;
+    uint256 reqdate; // epoch timestamp
   }
 
   struct Dispute {
@@ -108,6 +108,27 @@ contract CreditReport {
     _;
   }
 
+  /**
+   * A consumer is entitled
+   */
+  modifier freeReportCheck(address consumer, address subscriber, uint256 reqtime) {
+    bool found = false;
+    uint256 subscriber_lastreq = reqtime;
+    for (uint i = inquiries[consumer].length; i > 0; i--) {
+      if (!found && subscribers[inquiries[consumer][i].subscriber] != 0) {
+          subscriber_lastreq = inquiries[consumer][i].reqdate;
+          found = true;
+      }
+    }
+
+    uint consumer_total = inquiries[consumer].length - 1;
+    uint256 consumer_lastreq = inquiries[consumer][consumer_total].reqdate;
+    require(
+      consumer_lastreq == 0 || (consumer_lastreq + 52 weeks) > reqtime || (subscriber_lastreq + 90 days) < reqtime,
+     "not eligible for a free report");
+     _;
+  }
+
   modifier requiresFee(uint fee) {
     require(msg.sender.balance > fee, "insufficient balance/amount");
     _;
@@ -122,6 +143,22 @@ contract CreditReport {
     returns (address addr)
   {
     return owner;
+  }
+
+  function getUserRole()
+    public
+    view
+    validSender
+    returns (string memory)
+  {
+    if (msg.sender == owner) {
+      return string("owner");
+    } else if (subscribers[msg.sender] != 0) {
+      return string("subscriber");
+    } else if (consumers[msg.sender] != 0) {
+      return string("consumer");
+    }
+    return string("unknown");
   }
 
   /**
@@ -172,12 +209,13 @@ contract CreditReport {
     }
     ReportItem memory ritem = ReportItem(msg.sender, item);
     reports[consumer].push(ritem);
+    emit ConsumerNotified(consumer, "new item was added to your report");
   }
 
   /**
    * retrieves consumer report by a subscriber, fee is paid to the owner
    */
-  function getConsumerReport(address consumer, address payable to)
+  function getConsumerReport(address consumer, uint reqtime, address payable to)
     public
     payable
     onlySubscriber
@@ -186,38 +224,81 @@ contract CreditReport {
     returns (string memory)
   {
     //to.transfer(0.001 ether);
-    Inquiry memory inquiry = Inquiry(msg.sender, block.timestamp);
+    Inquiry memory inquiry = Inquiry(msg.sender, reqtime);
     inquiries[consumer].push(inquiry);
     return _report(consumer);
   }
 
   /**
-   * retrieves consumer report by the consumer, no fees
+   * When the consumer is not entitled to a free annual report
    */
-  function getCreditReport()
+  function getCreditReport(uint256 reqtime)
     public
+    payable
     onlyConsumer
     returns (string memory)
   {
-    Inquiry memory inquiry = Inquiry(msg.sender, block.timestamp);
+    Inquiry memory inquiry = Inquiry(msg.sender, reqtime);
     inquiries[msg.sender].push(inquiry);
     return _report(msg.sender);
   }
 
-  function openDispute(uint index, string memory disputeDate,string memory reason)
+  /**
+   * retrieves consumer report for the consumer by the owner so the consumer does not incur gas fees.
+   * to abide by law and allow free credit report to the consumer, cannot change the state on the contract,
+   * otherwise the method must pay gas fee. By not recording consumer self requests in the contract, keeps
+   * this function free.
+   */
+  function getFreeCreditReport(address consumer, address subscriber, uint256 reqtime)
     public
-    onlyConsumer
+    payable
+    onlyOwner
+    freeReportCheck(consumer, subscriber, reqtime)
+    returns (string memory)
   {
-    ReportItem memory report = ReportItem(reports[msg.sender][index].subscriber,reports[msg.sender][index].item);
-    Dispute memory dispute = Dispute(index, report.subscriber, msg.sender, disputeDate, report, reason, "");
-    disputes[msg.sender].push(dispute);
+    Inquiry memory inquiry = Inquiry(consumer, reqtime);
+    inquiries[consumer].push(inquiry);
+    return _report(consumer);
+  }
+
+
+  function getInquiries()
+    public
+    view
+    onlyConsumer
+    returns (string memory)
+  {
+    string memory output = "";
+    for (uint i = 0; i < inquiries[msg.sender].length; i++) {
+      output = string(
+        abi.encodePacked(
+          output,
+          inquiries[msg.sender][i].subscriber,
+          inquiries[msg.sender][i].reqdate
+        )
+      );
+    }
+    return output;
+  }
+
+  /**
+   * because open dispute changes the state of the contract, gas fees applies,
+   * hence the consumer must start a dispute offline, and send to the owner to create a dispute and the owner pays the gas fee
+   */
+  function openDispute(address consumer, uint index, string memory disputeDate,string memory reason)
+    public
+    onlyOwner
+  {
+    ReportItem memory report = ReportItem(reports[consumer][index].subscriber,reports[consumer][index].item);
+    Dispute memory dispute = Dispute(index, report.subscriber, consumer, disputeDate, report, reason, "");
+    disputes[consumer].push(dispute);
     message[report.subscriber].push(
       string(
         abi.encodePacked(
           "Dispute Opened:",
           index,
           report.subscriber,
-          msg.sender,
+          consumer,
           disputeDate,
           report.item,
           reason
@@ -256,6 +337,14 @@ contract CreditReport {
     returns (string memory)
   {
     return _report(consumer);
+  }
+
+  function getBlocktime()
+    public
+    view
+    returns (uint256)
+  {
+    return block.timestamp;
   }
 
   /**

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Blockchain Credit Reporting Agency</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">    
+    </head>
+    <body>
+        <!-- LOGIN -->
+        <div id="login-view" class="w3-container w3-panel">
+            <fieldset>
+                <legend>Login</legend>
+                <label for="userName">Username</label><input type="text" id="userName" class="w3-input w3-block" value="">
+                <label for="password">Password</label><input type="text" id="password" class="w3-input w3-block" value="">
+                <input type="button" class="w3-button w3-block w3-black" value="Login" onclick="login();" />
+                <br/>
+                <button onclick="showSettingsDialog()" class="w3-button w3-block w3-yellow">Settings</button>
+            </fieldset>
+        </div>
+        <!-- OWNER -->
+        <div id="owner-view" style="display:none;" class="w3-container">
+            <div class="w3-panel">
+                <fieldset>
+                    <legend>Owner</legend>
+                    <button onclick="logout('owner')" class="w3-button w3-block w3-black">Logout</button>
+                    <label for="owner-address">Address</label>
+                    <input type="text" class="w3-input w3-block w3-light-grey" id="owner-address" value="" readonly />
+                    <label for="owner-balance">Balance</label>
+                    <input type="number" steps="any" id="owner-balance" class="w3-input w3-block w3-light-grey" value="" readonly />
+                    <label for="blocktime">Block Timestamp</label>
+                    <input type="text" class="w3-input w3-block w3-light-grey" id="blocktime" value="" readonly />
+                    <label for="localepochktime">Local Epoch Timestamp</label>
+                    <input type="text" class="w3-input w3-block w3-light-grey" id="localepochtime" value="" readonly />
+                    <br/>
+                    <button onclick="newAccount()" class="w3-button w3-block w3-green">Add New Account</button>
+                    <br/>
+                    <fieldset>
+                        <legend>Subscriber(s)</legend>
+                        <textarea class="w3-input w3-block w3-light-grey" rows="5" id="subscribers" readonly></textarea>
+                        <label for="new-subscriber">New Subscriber</label>
+                        <input type="text" class="w3-input w3-block" id="new-subscriber" value="" />
+                        <button onclick="addNewSubscriber()" class="w3-button w3-block w3-black">Add Subscriber</button>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Consumer(s)</legend>
+                        <select id="consumers" class="w3-input w3-block" list="consumers-list">
+                            <option value="">Select</option>
+                        </select>
+                        <datalist id="consumers-list"></datalist>
+                        <label for="disputes">Disputes</label>
+                        <textarea id="disputes" class="w3-input w3-block w3-light-grey" row="5" readonly></textarea>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Messages</legend>
+                        <button class="w3-button w3-block w3-black" onclick="message_refresh()">Refresh</button>
+                    </fieldset>
+                </fieldset>
+            </div>
+        </div>
+        <!-- SUBSCRIBER -->
+        <div id="subscriber-view" style="display:none;" class="w3-container">
+            <div class="w3-panel">
+                <fieldset>
+                    <legend>Subscriber</legend>
+                    <button onclick="logout('subscriber')" class="w3-button w3-block w3-black">Logout</button>
+                    <label for="subscriber-address">Address</label>
+                    <input type="text" class="w3-input w3-block w3-light-grey" id="subscriber-address" value="" readonly />
+                    <label for="subscriber-balance">Balance</label>
+                    <input type="number" steps="any" id="subscriber-balance" class="w3-input w3-block w3-light-grey" value="" readonly />
+                    <br/>
+                    <fieldset>
+                        <legend>Consumer</legend>
+                        <label for="consumer">Consumer</label>
+                        <input type="text" id="consumer" class="w3-input w3-block" value="" />
+                    </fieldset>
+                    <fieldset>
+                        <legend>Consumer Report Inquiry</legend>
+                        <button class="w3-button w3-block w3-black" onclick="consumer_inquiry()">Submit</button>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Add Credit Report Item</legend>
+                        <!-- [ '2021-12-15', 'new account', 0, 0, 5000, 'pay as agreed' ]-->
+                        <label for="date">Date</label>
+                        <input type="date" id="date" class="w3-input w3-block" value="" />
+                        <label for="description">Description</label>
+                        <input type="text" id="description" class="w3-input w3-block" value="" />
+                        <label for="amount">Amount</label>
+                        <input type="number" id="amount" class="w3-input w3-block" value="0.00" steps="any" />
+                        <label for="balance">Balance</label>
+                        <input type="number" id="balance" class="w3-input w3-block" value="0.00" steps="any" />
+                        <label for="limit">Limit</label>
+                        <input type="number" id="limit" class="w3-input w3-block" value="0" steps="any" />
+                        <label for="paystatus">Payment Status</label>
+                        <input type="text" id="paystatus" class="w3-input w3-block" value="" />
+                        <br/>
+                        <button class="w3-button w3-block w3-black" onclick="add_report_item()">Submit</button>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Respond to a Dispute</legend>
+                        <button class="w3-block w3-button w3-black" onclick="getSubscriberDisputes()">Refresh Dispute(s)</button>
+                        <label for="subscriber-disputes">Disputes</label>
+                        <textarea id="subscriber-disputes" class="w3-input w3-block w3-light-grey" row="5" readonly></textarea>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Messages</legend>
+                        <button class="w3-button w3-block w3-black" onclick="message_refresh()">Refresh</button>
+                    </fieldset>
+                </fieldset>
+            </div>
+        </div>
+        <!-- CONSUMER -->
+        <div id="consumer-view" style="display:none;" class="w3-container">
+            <div class="w3-panel">
+                <fieldset>
+                    <legend>Consumer</legend>
+                    <button onclick="logout('consumer')" class="w3-button w3-block w3-black">Logout</button>
+                    <label for="consumer-address">Address</label>
+                    <input type="text" class="w3-input w3-block w3-light-grey" id="consumer-address" value="" readonly />
+                    <label for="consumer-balance">Balance</label>
+                    <input type="number" steps="any" id="consumer-balance" class="w3-input w3-block w3-light-grey" value="" readonly />
+                    <br/>
+                    <fieldset>
+                        <legend>Credit Report Inquiry</legend>
+                        <button class="w3-button w3-block w3-black" onclick="consumer_self_inquiry()">Submit</button>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Open a Dispute</legend>
+                        <label for="report-item">Report Item</label>
+                        <select class="w3-input w3-block" id="report-item">
+                            <option value="">Select</option>
+                        </select>
+                        <label for="reason">Reason</label>
+                        <textarea class="w3-input w3-block" rows="5" id="reason"></textarea>
+                        <button class="w3-button w3-block w3-black" onclick="addDispute()">Submit Dispute</button>
+                        <label for="consumer-disputes">Disputes</label>
+                        <textarea id="consumer-disputes" class="w3-input w3-block w3-light-grey" row="5" readonly></textarea>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Messages</legend>
+                        <button class="w3-button w3-block w3-black" onclick="message_refresh()">Refresh</button>
+                    </fieldset>
+                </fieldset>
+            </div>
+        </div>
+        <!-- SETTINGS DIALOG -->
+        <div id="settings-dialog" class="w3-modal">
+            <div class="w3-modal-content">
+                <div class="w3-container">
+                    <h2 class="w3-yellow">Settings</h2>
+                    <label for="host-url">URL</label>
+                    <input type="url" id="host-url" class="w3-input w3-block w3-pale-yellow" value="" />
+                    <br/>
+                    <button onclick="saveSettings()" class="w3-button w3-block w3-black">Save</button>
+                    <br/>
+                    <button onclick="document.getElementById('settings-dialog').style.display='none'" class="w3-button w3-block w3-orange">Cancel</button>
+                    <br/>
+                </div>
+            </div>
+        </div>
+        <!-- JAVASCRIPT -->
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+        <script type="text/javascript" src="../js/bignumber.min.js"></script>
+        <script type="text/javascript" src="../js/crypto-js.js"></script>
+        <script type="text/javascript" src="../js/utf8.js"></script>
+        <script type="text/javascript" src="../js/web3.min.js"></script>
+        <script>
+            // IP address and port number of the JSON-RPC server (virtual machine) to connect to
+            var url = "http://127.0.0.1:9545"
+            var user_name;
+            var web3 = new Web3();
+            var provider = new web3.providers.HttpProvider(url)
+            web3.setProvider(provider);
+            web3.eth.defaultAccount = web3.eth.accounts[0];
+            var ABI = [{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"addr","type":"address"},{"indexed":false,"internalType":"string","name":"message","type":"string"}],"name":"ConsumerNotified","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"addr","type":"address"},{"indexed":false,"internalType":"string","name":"message","type":"string"}],"name":"SubscriberAdded","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"addr","type":"address"},{"indexed":false,"internalType":"string","name":"message","type":"string"}],"name":"SubscriberNotified","type":"event"},{"inputs":[],"name":"getOwner","outputs":[{"internalType":"address","name":"addr","type":"address"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"getUserRole","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[{"internalType":"address","name":"addr","type":"address"},{"internalType":"uint256","name":"_type","type":"uint256"}],"name":"addSubscriber","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"getSubscribers","outputs":[{"internalType":"address[]","name":"","type":"address[]"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"getConsumers","outputs":[{"internalType":"address[]","name":"","type":"address[]"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[{"internalType":"address","name":"consumer","type":"address"},{"internalType":"bytes","name":"item","type":"bytes"}],"name":"addConsumerItem","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"consumer","type":"address"},{"internalType":"uint256","name":"reqtime","type":"uint256"},{"internalType":"address payable","name":"to","type":"address"}],"name":"getConsumerReport","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"payable","type":"function","payable":true},{"inputs":[{"internalType":"uint256","name":"reqtime","type":"uint256"}],"name":"getCreditReport","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"payable","type":"function","payable":true},{"inputs":[{"internalType":"address","name":"consumer","type":"address"},{"internalType":"address","name":"subscriber","type":"address"},{"internalType":"uint256","name":"reqtime","type":"uint256"}],"name":"getFreeCreditReport","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"payable","type":"function","payable":true},{"inputs":[],"name":"getInquiries","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[{"internalType":"address","name":"consumer","type":"address"},{"internalType":"uint256","name":"index","type":"uint256"},{"internalType":"string","name":"disputeDate","type":"string"},{"internalType":"string","name":"reason","type":"string"}],"name":"openDispute","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"consumer","type":"address"},{"internalType":"uint256","name":"index","type":"uint256"},{"internalType":"string","name":"status","type":"string"},{"internalType":"bool","name":"purge","type":"bool"}],"name":"finalizeDispute","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"consumer","type":"address"}],"name":"getReportsByConsumer","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"getBlocktime","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[{"internalType":"address","name":"consumer","type":"address"}],"name":"getDisputes","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[{"internalType":"uint256","name":"LastTimeStamp","type":"uint256"},{"internalType":"uint256","name":"currentTime","type":"uint256"}],"name":"checkExpiry","outputs":[{"internalType":"bool","name":"success","type":"bool"}],"stateMutability":"pure","type":"function","constant":true},{"inputs":[{"internalType":"address","name":"consumer","type":"address"},{"internalType":"uint256","name":"index","type":"uint256"}],"name":"purgeDispute","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_recipient","type":"address"},{"internalType":"string","name":"_message","type":"string"}],"name":"sendMessage","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"readMessage","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function","constant":true}];
+            var abiAdress = "0x51C752055F8ccA641810D36C264caF1F5212f9A7";
+            var master = web3.eth.contract(ABI).at(abiAdress);
+            var owner = getOwner();
+            var liverates;
+    
+            window.onload = function() {
+                fetch('https://api.kraken.com/0/public/Ticker?pair=ETHUSD')
+                .then(res => res.json())
+                .then(function(_rates){
+                    liverates = _rates.result;
+                    console.log(liverates);
+                })
+            }
+
+            async function getOwner() {
+                owner = await master.getOwner();
+            }
+
+            function showSettingsDialog() {
+                document.getElementById('host-url').value = localStorage.getItem('host-url');
+                document.getElementById('settings-dialog').style.display='block';
+            }
+            function saveSettings() {
+                localStorage.putItem('host-url', document.getElementById('host-url').value);
+                document.getElementById('settings-dialog').style.display='none';
+            }
+        </script>
+    </body>
+</html>
