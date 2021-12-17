@@ -150,6 +150,10 @@
                     <h2 class="w3-yellow">Settings</h2>
                     <label for="host-url">URL</label>
                     <input type="url" id="host-url" class="w3-input w3-block w3-pale-yellow" value="" />
+                    <label for="contract-address">Contract Address</label>
+                    <input type="text" id="contract-address" class="w3-input w3-block w3-light-grey" value="" readonly/>
+                    <label for="abi">ABI</label>
+                    <textarea class="w3-input w3-block w3-light-grey" rows="10" id="abi" readonly></textarea>
                     <br/>
                     <button onclick="saveSettings()" class="w3-button w3-block w3-black">Save</button>
                     <br/>
@@ -164,18 +168,17 @@
         <script type="text/javascript" src="../js/crypto-js.js"></script>
         <script type="text/javascript" src="../js/utf8.js"></script>
         <script type="text/javascript" src="../js/web3.min.js"></script>
+        <script type="text/javascript" src="./js/owner.js"></script>
         <script>
             // IP address and port number of the JSON-RPC server (virtual machine) to connect to
             var url = "http://127.0.0.1:9545"
             var user_name;
             var web3 = new Web3();
-            var provider = new web3.providers.HttpProvider(url)
-            web3.setProvider(provider);
-            web3.eth.defaultAccount = web3.eth.accounts[0];
-            var ABI = [{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"addr","type":"address"},{"indexed":false,"internalType":"string","name":"message","type":"string"}],"name":"ConsumerNotified","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"addr","type":"address"},{"indexed":false,"internalType":"string","name":"message","type":"string"}],"name":"SubscriberAdded","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"addr","type":"address"},{"indexed":false,"internalType":"string","name":"message","type":"string"}],"name":"SubscriberNotified","type":"event"},{"inputs":[],"name":"getOwner","outputs":[{"internalType":"address","name":"addr","type":"address"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"getUserRole","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[{"internalType":"address","name":"addr","type":"address"},{"internalType":"uint256","name":"_type","type":"uint256"}],"name":"addSubscriber","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"getSubscribers","outputs":[{"internalType":"address[]","name":"","type":"address[]"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"getConsumers","outputs":[{"internalType":"address[]","name":"","type":"address[]"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[{"internalType":"address","name":"consumer","type":"address"},{"internalType":"bytes","name":"item","type":"bytes"}],"name":"addConsumerItem","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"consumer","type":"address"},{"internalType":"uint256","name":"reqtime","type":"uint256"},{"internalType":"address payable","name":"to","type":"address"}],"name":"getConsumerReport","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"payable","type":"function","payable":true},{"inputs":[{"internalType":"uint256","name":"reqtime","type":"uint256"}],"name":"getCreditReport","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"payable","type":"function","payable":true},{"inputs":[{"internalType":"address","name":"consumer","type":"address"},{"internalType":"address","name":"subscriber","type":"address"},{"internalType":"uint256","name":"reqtime","type":"uint256"}],"name":"getFreeCreditReport","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"payable","type":"function","payable":true},{"inputs":[],"name":"getInquiries","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[{"internalType":"address","name":"consumer","type":"address"},{"internalType":"uint256","name":"index","type":"uint256"},{"internalType":"string","name":"disputeDate","type":"string"},{"internalType":"string","name":"reason","type":"string"}],"name":"openDispute","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"consumer","type":"address"},{"internalType":"uint256","name":"index","type":"uint256"},{"internalType":"string","name":"status","type":"string"},{"internalType":"bool","name":"purge","type":"bool"}],"name":"finalizeDispute","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"consumer","type":"address"}],"name":"getReportsByConsumer","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"getBlocktime","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[{"internalType":"address","name":"consumer","type":"address"}],"name":"getDisputes","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[{"internalType":"uint256","name":"LastTimeStamp","type":"uint256"},{"internalType":"uint256","name":"currentTime","type":"uint256"}],"name":"checkExpiry","outputs":[{"internalType":"bool","name":"success","type":"bool"}],"stateMutability":"pure","type":"function","constant":true},{"inputs":[{"internalType":"address","name":"consumer","type":"address"},{"internalType":"uint256","name":"index","type":"uint256"}],"name":"purgeDispute","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_recipient","type":"address"},{"internalType":"string","name":"_message","type":"string"}],"name":"sendMessage","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"readMessage","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function","constant":true}];
-            var abiAdress = "0x51C752055F8ccA641810D36C264caF1F5212f9A7";
-            var master = web3.eth.contract(ABI).at(abiAdress);
-            var owner = getOwner();
+            var provider; //= new web3.providers.HttpProvider(url)
+            var ABI = null;
+            var abiAdress = "";
+            var master; // = web3.eth.contract(ABI).at(abiAdress);
+            var owner; // = getOwner();
             var liverates;
     
             window.onload = function() {
@@ -184,21 +187,127 @@
                 .then(function(_rates){
                     liverates = _rates.result;
                     console.log(liverates);
-                })
+                });
+
+                getContractMeta();
+
+                provider = new web3.providers.HttpProvider(url);
+                web3.setProvider(provider);
+                web3.eth.defaultAccount = web3.eth.accounts[0];
             }
 
-            async function getOwner() {
-                owner = await master.getOwner();
+            async function getContractMeta() {
+                await SendIPC("abi",{},function(channel, event, data){
+                    ABI = JSON.parse(data);
+                });
+                await SendIPC("contract_address",{},function(channel, event, data){
+                    abiAdress = data;
+                    console.log(ABI);
+                    master = web3.eth.contract(ABI).at(abiAdress);
+                    owner = getOwner();
+                });
             }
+
+            // Login (Unlock) - Define parameters to send to json-rpc
+            function login() {
+                user_name = $("#userName").val(); //User address to be entered
+                var password = $("#password").val(); //address's password
+                var JSONdata = createJSONdata("personal_unlockAccount", [user_name, password, 3600]);
+                //Run json-rpc (initial) Connect to geth and run init
+                executeJsonRpc(url, JSONdata, function success(data) {
+                    // log-in succeed
+                    if (data.error == null) {
+                        console.log("login success!");
+
+                    } else {
+                        // Login failed
+                        console.log("login error1");
+                    }
+                    init();
+                    //var x = "Login & Reset is successful!"
+                    //alert(x);
+                    role();
+                }, function error(data) {
+                    // Login failed
+                    console.log("login error2");
+                });
+            }
+            // initialization
+            function init() {
+                web3.eth.defaultAccount = user_name;
+                master
+            }
+
+            // get user role
+            async function role() {
+                var role = await master.getUserRole({from: user_name});
+                console.log(role);
+                if (role != "unknown") {
+                    document.getElementById("login-view").style.display = "none";
+                    document.getElementById(`${role}-view`).style.display = "block";
+                    getBalance(role);
+                    switch(role) {
+                        case 'owner':
+                            document.getElementById('owner-address').value = user_name;
+                            getSubscribers();
+                            getConsumers();
+                            getBlocktime();
+                            break;
+                        case 'subscriber':
+                            document.getElementById('subscriber-address').value = user_name;
+                            document.addEventListener(master.SubscriberNotified, function(addr, message){
+                                console.log(addr, message);
+                            });
+                            document.addEventListener(master.ConsumerNotified, function(addr, message){
+                                console.log(addr, message);
+                            });
+                            break;
+                        case 'consumer':
+                            document.getElementById('consumer-address').value = user_name;
+                            break;
+                    }
+                }
+            }
+
 
             function showSettingsDialog() {
                 document.getElementById('host-url').value = localStorage.getItem('host-url');
+                document.getElementById('contract-address').value = abiAdress;
+                document.getElementById('abi').value = abi;
+
                 document.getElementById('settings-dialog').style.display='block';
             }
             function saveSettings() {
                 localStorage.putItem('host-url', document.getElementById('host-url').value);
                 document.getElementById('settings-dialog').style.display='none';
             }
+            function SendIPC(channel,params,callback) {
+                window.api.receive(channel, function(channel, event, data){
+                    callback(channel, event, data);
+                });
+                window.api.send(channel, params);
+            }
+        // message refresh
+        async function message_refresh() {
+            var messages = master.readMessage({from: user_name});
+            console.log(messages);
+        }
+
+        // logout
+        function logout(role) {
+            document.getElementById("userName").value = "";
+            document.getElementById("password").value = "";
+            user_name = "";
+
+            document.getElementById(`${role}-view`).style.display = "none";
+            document.getElementById("login-view").style.display = "block";
+        }
+
+        function refresh() {
+            web3.eth.defaultAccount = user_name;
+            init();
+        }
+
         </script>
     </body>
 </html>

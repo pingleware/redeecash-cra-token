@@ -21,8 +21,8 @@ function createWindow () {
     mainWindow.on("closed", function () {
       mainWindow = null;
     });
-    mainWindow.setMenu(null);
-    mainWindow.setResizable(false);
+    //mainWindow.setMenu(null);
+    //mainWindow.setResizable(false);
 }
 
 app.on("ready", createWindow);
@@ -38,7 +38,6 @@ ipcMain.on("error", function(evt, data){
 
 // Load build contract 
 const CreditReport = require('../build/contracts/CreditReport.json');
-const network_id = Object.keys(CreditReport.networks)[0];
 
 ipcMain.on("abi", function(evt, data){
     // ABI description as JSON structure
@@ -49,6 +48,13 @@ ipcMain.on("abi", function(evt, data){
 ipcMain.on("contract_address", function(evt, data){
     // Get network id fom build contract
     // Get the contract address    
+    const network_id = Object.keys(CreditReport.networks)[0];
     var contract_address = CreditReport.networks[`${network_id}`].address;
     mainWindow.webContents.send("contract_address", contract_address);
 });
+
+const network_id = Object.keys(CreditReport.networks)[0];
+var contract_address = CreditReport.networks[`${network_id}`].address;
+console.log(contract_address);
+let abi = CreditReport.abi;
+console.log(JSON.stringify(abi));

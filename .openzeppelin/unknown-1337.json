@@ -1,0 +1,635 @@
+{
+  "manifestVersion": "3.2",
+  "admin": {
+    "address": "0x199E8063f0c941Ef25F1B30D50EDa4BC8f5847Fb",
+    "txHash": "0x38d0c3d75fb780fa2eafc6e00763ae60d6d4b30b0f15e52a535820c5427b8c1a"
+  },
+  "proxies": [
+    {
+      "address": "0x78EfA70b82820024aAb262a7888BF999204a1fbc",
+      "txHash": "0x7f711e77dcb3ebdc46eed3c4723e0bd72160530f024ede9853ad4631f77838f1",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x45A2419ff25988592778e551c88184A6a97F2664",
+      "txHash": "0xe964c01f885693e511317da05f730e27e1caf1940e9e089e8967b8e855e1379e",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x2BfD304163411A6585AC57A9365bFE48037a053b",
+      "txHash": "0xfa82e420793aed80a09e123da2c6fb7bc4ec54173bffc173fa6e1151dcae7659",
+      "kind": "transparent"
+    }
+  ],
+  "impls": {
+    "7d99395c821f9ea4ac37420771aea7fb2f7f76599edc3f5ab291d1fbe17f668d": {
+      "address": "0xD713D49eFD149ab5359aE4ED8da4aC4c721090ba",
+      "txHash": "0xbddc70371c35544c45535ac0bc72ce628c99c576b66bc880dfcc81166ee95463",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Initializable",
+            "label": "_initialized",
+            "type": "t_bool",
+            "src": "..\\@openzeppelin\\contracts\\token\\ERC20\\extensions\\IERC20Metadata.sol:29"
+          },
+          {
+            "contract": "Initializable",
+            "label": "_initializing",
+            "type": "t_bool",
+            "src": "..\\@openzeppelin\\contracts\\token\\ERC20\\extensions\\IERC20Metadata.sol:29"
+          },
+          {
+            "contract": "CreditReport",
+            "label": "reports",
+            "type": "t_mapping(t_address,t_array(t_struct(ReportItem)34_storage)dyn_storage)",
+            "src": "..\\@openzeppelin\\contracts\\token\\ERC20\\ERC20.sol:22"
+          },
+          {
+            "contract": "CreditReport",
+            "label": "subscribers",
+            "type": "t_mapping(t_address,t_uint256)",
+            "src": "..\\@openzeppelin\\contracts\\token\\ERC20\\ERC20.sol:23"
+          },
+          {
+            "contract": "CreditReport",
+            "label": "consumers",
+            "type": "t_mapping(t_address,t_uint256)",
+            "src": "..\\@openzeppelin\\contracts\\token\\ERC20\\ERC20.sol:24"
+          },
+          {
+            "contract": "CreditReport",
+            "label": "inquiries",
+            "type": "t_mapping(t_address,t_array(t_struct(Inquiry)39_storage)dyn_storage)",
+            "src": "..\\@openzeppelin\\contracts\\token\\ERC20\\ERC20.sol:26"
+          },
+          {
+            "contract": "CreditReport",
+            "label": "disputes",
+            "type": "t_mapping(t_address,t_array(t_struct(Dispute)55_storage)dyn_storage)",
+            "src": "..\\@openzeppelin\\contracts\\token\\ERC20\\ERC20.sol:27"
+          },
+          {
+            "contract": "CreditReport",
+            "label": "_subscribers",
+            "type": "t_array(t_address)dyn_storage",
+            "src": "..\\@openzeppelin\\contracts\\token\\ERC20\\ERC20.sol:27"
+          },
+          {
+            "contract": "CreditReport",
+            "label": "_consumers",
+            "type": "t_array(t_address)dyn_storage",
+            "src": "..\\@openzeppelin\\contracts\\token\\ERC20\\ERC20.sol:28"
+          },
+          {
+            "contract": "CreditReport",
+            "label": "total_consumers",
+            "type": "t_uint256",
+            "src": "..\\@openzeppelin\\contracts\\token\\ERC20\\ERC20.sol:28"
+          },
+          {
+            "contract": "CreditReport",
+            "label": "message",
+            "type": "t_mapping(t_address,t_array(t_string_storage)dyn_storage)",
+            "src": "..\\@openzeppelin\\contracts\\token\\ERC20\\ERC20.sol:29"
+          },
+          {
+            "contract": "CreditReport",
+            "label": "_owner",
+            "type": "t_mapping(t_bytes_memory_ptr,t_address)",
+            "src": "..\\@openzeppelin\\contracts\\token\\ERC20\\ERC20.sol:29"
+          },
+          {
+            "contract": "CreditReport",
+            "label": "owner",
+            "type": "t_address_payable",
+            "src": "..\\@openzeppelin\\contracts\\token\\ERC20\\ERC20.sol:31"
+          },
+          {
+            "contract": "CreditReport",
+            "label": "initialized",
+            "type": "t_bool",
+            "src": "..\\@openzeppelin\\contracts\\token\\ERC20\\ERC20.sol:31"
+          }
+        ],
+        "types": {
+          "t_mapping(t_address,t_array(t_struct(ReportItem)34_storage)dyn_storage)": {
+            "label": "mapping(address => struct CreditReport.ReportItem[])"
+          },
+          "t_address": {
+            "label": "address"
+          },
+          "t_array(t_struct(ReportItem)34_storage)dyn_storage": {
+            "label": "struct CreditReport.ReportItem[]"
+          },
+          "t_struct(ReportItem)34_storage": {
+            "label": "struct CreditReport.ReportItem",
+            "members": [
+              {
+                "label": "subscriber",
+                "type": "t_address"
+              },
+              {
+                "label": "item",
+                "type": "t_bytes_storage"
+              }
+            ]
+          },
+          "t_bytes_storage": {
+            "label": "bytes"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)"
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_mapping(t_address,t_array(t_struct(Inquiry)39_storage)dyn_storage)": {
+            "label": "mapping(address => struct CreditReport.Inquiry[])"
+          },
+          "t_array(t_struct(Inquiry)39_storage)dyn_storage": {
+            "label": "struct CreditReport.Inquiry[]"
+          },
+          "t_struct(Inquiry)39_storage": {
+            "label": "struct CreditReport.Inquiry",
+            "members": [
+              {
+                "label": "subscriber",
+                "type": "t_address"
+              },
+              {
+                "label": "reqdate",
+                "type": "t_uint256"
+              }
+            ]
+          },
+          "t_mapping(t_address,t_array(t_struct(Dispute)55_storage)dyn_storage)": {
+            "label": "mapping(address => struct CreditReport.Dispute[])"
+          },
+          "t_array(t_struct(Dispute)55_storage)dyn_storage": {
+            "label": "struct CreditReport.Dispute[]"
+          },
+          "t_struct(Dispute)55_storage": {
+            "label": "struct CreditReport.Dispute",
+            "members": [
+              {
+                "label": "index",
+                "type": "t_uint256"
+              },
+              {
+                "label": "subscriber",
+                "type": "t_address"
+              },
+              {
+                "label": "consumer",
+                "type": "t_address"
+              },
+              {
+                "label": "disputeDate",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "item",
+                "type": "t_struct(ReportItem)34_storage"
+              },
+              {
+                "label": "reason",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "status",
+                "type": "t_string_storage"
+              }
+            ]
+          },
+          "t_string_storage": {
+            "label": "string"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]"
+          },
+          "t_mapping(t_address,t_array(t_string_storage)dyn_storage)": {
+            "label": "mapping(address => string[])"
+          },
+          "t_array(t_string_storage)dyn_storage": {
+            "label": "string[]"
+          },
+          "t_mapping(t_bytes_memory_ptr,t_address)": {
+            "label": "mapping(bytes => address)"
+          },
+          "t_address_payable": {
+            "label": "address payable"
+          },
+          "t_bool": {
+            "label": "bool"
+          }
+        }
+      }
+    },
+    "0daf925194f161d8f29241be6ad525ce6f8c9a837f21c17ce6eea7e765055b00": {
+      "address": "0xf0791e74270c377b5562F6cD448546f654Dc8Ff6",
+      "txHash": "0x891d2fae6d569914cd5cbe0b801c6e012e31764f1e7c578d2084d9f295621920",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Initializable",
+            "label": "_initialized",
+            "type": "t_bool",
+            "src": "..\\@openzeppelin\\contracts\\token\\ERC20\\extensions\\IERC20Metadata.sol:29"
+          },
+          {
+            "contract": "Initializable",
+            "label": "_initializing",
+            "type": "t_bool",
+            "src": "..\\@openzeppelin\\contracts\\token\\ERC20\\extensions\\IERC20Metadata.sol:29"
+          },
+          {
+            "contract": "CreditReport",
+            "label": "reports",
+            "type": "t_mapping(t_address,t_array(t_struct(ReportItem)34_storage)dyn_storage)",
+            "src": "..\\@openzeppelin\\contracts\\token\\ERC20\\ERC20.sol:22"
+          },
+          {
+            "contract": "CreditReport",
+            "label": "subscribers",
+            "type": "t_mapping(t_address,t_uint256)",
+            "src": "..\\@openzeppelin\\contracts\\token\\ERC20\\ERC20.sol:23"
+          },
+          {
+            "contract": "CreditReport",
+            "label": "consumers",
+            "type": "t_mapping(t_address,t_uint256)",
+            "src": "..\\@openzeppelin\\contracts\\token\\ERC20\\ERC20.sol:24"
+          },
+          {
+            "contract": "CreditReport",
+            "label": "inquiries",
+            "type": "t_mapping(t_address,t_array(t_struct(Inquiry)39_storage)dyn_storage)",
+            "src": "..\\@openzeppelin\\contracts\\token\\ERC20\\ERC20.sol:26"
+          },
+          {
+            "contract": "CreditReport",
+            "label": "disputes",
+            "type": "t_mapping(t_address,t_array(t_struct(Dispute)55_storage)dyn_storage)",
+            "src": "..\\@openzeppelin\\contracts\\token\\ERC20\\ERC20.sol:27"
+          },
+          {
+            "contract": "CreditReport",
+            "label": "_subscribers",
+            "type": "t_array(t_address)dyn_storage",
+            "src": "..\\@openzeppelin\\contracts\\token\\ERC20\\ERC20.sol:27"
+          },
+          {
+            "contract": "CreditReport",
+            "label": "_consumers",
+            "type": "t_array(t_address)dyn_storage",
+            "src": "..\\@openzeppelin\\contracts\\token\\ERC20\\ERC20.sol:28"
+          },
+          {
+            "contract": "CreditReport",
+            "label": "total_consumers",
+            "type": "t_uint256",
+            "src": "..\\@openzeppelin\\contracts\\token\\ERC20\\ERC20.sol:28"
+          },
+          {
+            "contract": "CreditReport",
+            "label": "message",
+            "type": "t_mapping(t_address,t_array(t_string_storage)dyn_storage)",
+            "src": "..\\@openzeppelin\\contracts\\token\\ERC20\\ERC20.sol:29"
+          },
+          {
+            "contract": "CreditReport",
+            "label": "_owner",
+            "type": "t_mapping(t_bytes_memory_ptr,t_address)",
+            "src": "..\\@openzeppelin\\contracts\\token\\ERC20\\ERC20.sol:29"
+          },
+          {
+            "contract": "CreditReport",
+            "label": "owner",
+            "type": "t_address",
+            "src": "..\\@openzeppelin\\contracts\\token\\ERC20\\ERC20.sol:31"
+          },
+          {
+            "contract": "CreditReport",
+            "label": "initialized",
+            "type": "t_bool",
+            "src": "..\\@openzeppelin\\contracts\\token\\ERC20\\ERC20.sol:31"
+          }
+        ],
+        "types": {
+          "t_mapping(t_address,t_array(t_struct(ReportItem)34_storage)dyn_storage)": {
+            "label": "mapping(address => struct CreditReport.ReportItem[])"
+          },
+          "t_address": {
+            "label": "address"
+          },
+          "t_array(t_struct(ReportItem)34_storage)dyn_storage": {
+            "label": "struct CreditReport.ReportItem[]"
+          },
+          "t_struct(ReportItem)34_storage": {
+            "label": "struct CreditReport.ReportItem",
+            "members": [
+              {
+                "label": "subscriber",
+                "type": "t_address"
+              },
+              {
+                "label": "item",
+                "type": "t_bytes_storage"
+              }
+            ]
+          },
+          "t_bytes_storage": {
+            "label": "bytes"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)"
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_mapping(t_address,t_array(t_struct(Inquiry)39_storage)dyn_storage)": {
+            "label": "mapping(address => struct CreditReport.Inquiry[])"
+          },
+          "t_array(t_struct(Inquiry)39_storage)dyn_storage": {
+            "label": "struct CreditReport.Inquiry[]"
+          },
+          "t_struct(Inquiry)39_storage": {
+            "label": "struct CreditReport.Inquiry",
+            "members": [
+              {
+                "label": "subscriber",
+                "type": "t_address"
+              },
+              {
+                "label": "reqdate",
+                "type": "t_uint256"
+              }
+            ]
+          },
+          "t_mapping(t_address,t_array(t_struct(Dispute)55_storage)dyn_storage)": {
+            "label": "mapping(address => struct CreditReport.Dispute[])"
+          },
+          "t_array(t_struct(Dispute)55_storage)dyn_storage": {
+            "label": "struct CreditReport.Dispute[]"
+          },
+          "t_struct(Dispute)55_storage": {
+            "label": "struct CreditReport.Dispute",
+            "members": [
+              {
+                "label": "index",
+                "type": "t_uint256"
+              },
+              {
+                "label": "subscriber",
+                "type": "t_address"
+              },
+              {
+                "label": "consumer",
+                "type": "t_address"
+              },
+              {
+                "label": "disputeDate",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "item",
+                "type": "t_struct(ReportItem)34_storage"
+              },
+              {
+                "label": "reason",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "status",
+                "type": "t_string_storage"
+              }
+            ]
+          },
+          "t_string_storage": {
+            "label": "string"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]"
+          },
+          "t_mapping(t_address,t_array(t_string_storage)dyn_storage)": {
+            "label": "mapping(address => string[])"
+          },
+          "t_array(t_string_storage)dyn_storage": {
+            "label": "string[]"
+          },
+          "t_mapping(t_bytes_memory_ptr,t_address)": {
+            "label": "mapping(bytes => address)"
+          },
+          "t_bool": {
+            "label": "bool"
+          }
+        }
+      }
+    },
+    "e7b4c8ae754309b65df43f5299bad628633878bcf72200c2d78051d9cc862e9c": {
+      "address": "0x0aC1e5Bb71DFCcEd5C0B4bB41c3571D1c0713982",
+      "txHash": "0x04be13323869a9815efce28e1a328f4b42f48d472ee01f37d321ee04b3610ed4",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Initializable",
+            "label": "_initialized",
+            "type": "t_bool",
+            "src": "..\\@openzeppelin\\contracts\\token\\ERC20\\extensions\\IERC20Metadata.sol:29"
+          },
+          {
+            "contract": "Initializable",
+            "label": "_initializing",
+            "type": "t_bool",
+            "src": "..\\@openzeppelin\\contracts\\token\\ERC20\\extensions\\IERC20Metadata.sol:29"
+          },
+          {
+            "contract": "CreditReport",
+            "label": "reports",
+            "type": "t_mapping(t_address,t_array(t_struct(ReportItem)34_storage)dyn_storage)",
+            "src": "..\\@openzeppelin\\contracts\\token\\ERC20\\ERC20.sol:22"
+          },
+          {
+            "contract": "CreditReport",
+            "label": "subscribers",
+            "type": "t_mapping(t_address,t_uint256)",
+            "src": "..\\@openzeppelin\\contracts\\token\\ERC20\\ERC20.sol:23"
+          },
+          {
+            "contract": "CreditReport",
+            "label": "consumers",
+            "type": "t_mapping(t_address,t_uint256)",
+            "src": "..\\@openzeppelin\\contracts\\token\\ERC20\\ERC20.sol:24"
+          },
+          {
+            "contract": "CreditReport",
+            "label": "inquiries",
+            "type": "t_mapping(t_address,t_array(t_struct(Inquiry)39_storage)dyn_storage)",
+            "src": "..\\@openzeppelin\\contracts\\token\\ERC20\\ERC20.sol:26"
+          },
+          {
+            "contract": "CreditReport",
+            "label": "disputes",
+            "type": "t_mapping(t_address,t_array(t_struct(Dispute)55_storage)dyn_storage)",
+            "src": "..\\@openzeppelin\\contracts\\token\\ERC20\\ERC20.sol:27"
+          },
+          {
+            "contract": "CreditReport",
+            "label": "_subscribers",
+            "type": "t_array(t_address)dyn_storage",
+            "src": "..\\@openzeppelin\\contracts\\token\\ERC20\\ERC20.sol:27"
+          },
+          {
+            "contract": "CreditReport",
+            "label": "_consumers",
+            "type": "t_array(t_address)dyn_storage",
+            "src": "..\\@openzeppelin\\contracts\\token\\ERC20\\ERC20.sol:28"
+          },
+          {
+            "contract": "CreditReport",
+            "label": "total_consumers",
+            "type": "t_uint256",
+            "src": "..\\@openzeppelin\\contracts\\token\\ERC20\\ERC20.sol:28"
+          },
+          {
+            "contract": "CreditReport",
+            "label": "message",
+            "type": "t_mapping(t_address,t_array(t_bytes32)dyn_storage)",
+            "src": "..\\@openzeppelin\\contracts\\token\\ERC20\\ERC20.sol:29"
+          },
+          {
+            "contract": "CreditReport",
+            "label": "_owner",
+            "type": "t_mapping(t_bytes_memory_ptr,t_address)",
+            "src": "..\\@openzeppelin\\contracts\\token\\ERC20\\ERC20.sol:29"
+          },
+          {
+            "contract": "CreditReport",
+            "label": "owner",
+            "type": "t_address",
+            "src": "..\\@openzeppelin\\contracts\\token\\ERC20\\ERC20.sol:31"
+          },
+          {
+            "contract": "CreditReport",
+            "label": "initialized",
+            "type": "t_bool",
+            "src": "..\\@openzeppelin\\contracts\\token\\ERC20\\ERC20.sol:31"
+          }
+        ],
+        "types": {
+          "t_mapping(t_address,t_array(t_struct(ReportItem)34_storage)dyn_storage)": {
+            "label": "mapping(address => struct CreditReport.ReportItem[])"
+          },
+          "t_address": {
+            "label": "address"
+          },
+          "t_array(t_struct(ReportItem)34_storage)dyn_storage": {
+            "label": "struct CreditReport.ReportItem[]"
+          },
+          "t_struct(ReportItem)34_storage": {
+            "label": "struct CreditReport.ReportItem",
+            "members": [
+              {
+                "label": "subscriber",
+                "type": "t_address"
+              },
+              {
+                "label": "item",
+                "type": "t_bytes_storage"
+              }
+            ]
+          },
+          "t_bytes_storage": {
+            "label": "bytes"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)"
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_mapping(t_address,t_array(t_struct(Inquiry)39_storage)dyn_storage)": {
+            "label": "mapping(address => struct CreditReport.Inquiry[])"
+          },
+          "t_array(t_struct(Inquiry)39_storage)dyn_storage": {
+            "label": "struct CreditReport.Inquiry[]"
+          },
+          "t_struct(Inquiry)39_storage": {
+            "label": "struct CreditReport.Inquiry",
+            "members": [
+              {
+                "label": "subscriber",
+                "type": "t_address"
+              },
+              {
+                "label": "reqdate",
+                "type": "t_uint256"
+              }
+            ]
+          },
+          "t_mapping(t_address,t_array(t_struct(Dispute)55_storage)dyn_storage)": {
+            "label": "mapping(address => struct CreditReport.Dispute[])"
+          },
+          "t_array(t_struct(Dispute)55_storage)dyn_storage": {
+            "label": "struct CreditReport.Dispute[]"
+          },
+          "t_struct(Dispute)55_storage": {
+            "label": "struct CreditReport.Dispute",
+            "members": [
+              {
+                "label": "index",
+                "type": "t_uint256"
+              },
+              {
+                "label": "subscriber",
+                "type": "t_address"
+              },
+              {
+                "label": "consumer",
+                "type": "t_address"
+              },
+              {
+                "label": "disputeDate",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "item",
+                "type": "t_struct(ReportItem)34_storage"
+              },
+              {
+                "label": "reason",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "status",
+                "type": "t_string_storage"
+              }
+            ]
+          },
+          "t_string_storage": {
+            "label": "string"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]"
+          },
+          "t_mapping(t_address,t_array(t_bytes32)dyn_storage)": {
+            "label": "mapping(address => bytes32[])"
+          },
+          "t_array(t_bytes32)dyn_storage": {
+            "label": "bytes32[]"
+          },
+          "t_bytes32": {
+            "label": "bytes32"
+          },
+          "t_mapping(t_bytes_memory_ptr,t_address)": {
+            "label": "mapping(bytes => address)"
+          },
+          "t_bool": {
+            "label": "bool"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
 
-contract CreditReport {
+import "../node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+
+contract CreditReport is Initializable {
   bytes32 constant private ZERO_BYTES = bytes32(0);
   address constant private ZERO_ADDRESS = address(0);
 
@@ -44,21 +46,27 @@ contract CreditReport {
   address[] private _subscribers;
   address[] private _consumers;
 
-  uint total_consumers = 0;
+  uint total_consumers;
 
-  mapping (address => string[]) message;
+  mapping (address => bytes32[]) message;
 
   mapping (bytes => address) private _owner;
 
   address private owner;
+  bool private initialized;
 
   event SubscriberAdded(address addr, string message);
   event SubscriberNotified(address addr, string message);
   event ConsumerNotified(address addr, string message);
 
-  constructor()
+  function initialize()
+    public
+    initializer
   {
+    require(!initialized, "Contract instance has already been initialized");
     owner = msg.sender;
+    initialized = true;
+    total_consumers = 0;
   }
 
   modifier onlyOwner() {
@@ -212,6 +220,21 @@ contract CreditReport {
     emit ConsumerNotified(consumer, "new item was added to your report");
   }
 
+  function getConsumerReportTotal(address consumer)
+    public
+    view
+    returns (uint)
+  {
+    return _reportItemsTotal(consumer);
+  }
+
+  function getConsumerReportItem(address consumer,uint index)
+    public
+    view
+    returns (bytes memory)
+  {
+    return _reportItem(consumer, index);
+  }
   /**
    * retrieves consumer report by a subscriber, fee is paid to the owner
    */
@@ -221,7 +244,7 @@ contract CreditReport {
     onlySubscriber
     isOwner(to)
     requiresFee(0.001 ether)
-    returns (string memory)
+    returns (bytes32)
   {
     //to.transfer(0.001 ether);
     Inquiry memory inquiry = Inquiry(msg.sender, reqtime);
@@ -236,7 +259,7 @@ contract CreditReport {
     public
     payable
     onlyConsumer
-    returns (string memory)
+    returns (bytes32)
   {
     Inquiry memory inquiry = Inquiry(msg.sender, reqtime);
     inquiries[msg.sender].push(inquiry);
@@ -254,7 +277,7 @@ contract CreditReport {
     payable
     onlyOwner
     freeReportCheck(consumer, subscriber, reqtime)
-    returns (string memory)
+    returns (bytes32)
   {
     Inquiry memory inquiry = Inquiry(consumer, reqtime);
     inquiries[consumer].push(inquiry);
@@ -293,7 +316,7 @@ contract CreditReport {
     Dispute memory dispute = Dispute(index, report.subscriber, consumer, disputeDate, report, reason, "");
     disputes[consumer].push(dispute);
     message[report.subscriber].push(
-      string(
+      keccak256(
         abi.encodePacked(
           "Dispute Opened:",
           index,
@@ -334,7 +357,7 @@ contract CreditReport {
     public
     view
     onlyOwner
-    returns (string memory)
+    returns (bytes32)
   {
     return _report(consumer);
   }
@@ -358,9 +381,9 @@ contract CreditReport {
     public
     view
     onlyOwner
-    returns (string memory)
+    returns (bytes32)
   {
-    string memory output = "";
+    bytes32 output = "";
     for (uint i = 0; i < disputes[consumer].length; i++) {
       Dispute memory _dispute = Dispute(
         disputes[consumer][i].index,
@@ -371,7 +394,7 @@ contract CreditReport {
         disputes[consumer][i].reason,
         disputes[consumer][i].status
       );
-      output = string(
+      output = keccak256(
         abi.encodePacked(
           output,
           "[",
@@ -412,7 +435,7 @@ contract CreditReport {
     emit ConsumerNotified(consumer, "dispute deleted");
   }
 
-  function sendMessage(address _recipient, string memory _message)
+  function sendMessage(address _recipient, bytes32 _message)
     public
   {
     message[_recipient].push(_message);
@@ -421,14 +444,9 @@ contract CreditReport {
   function readMessage()
     public
     view
-    returns (string memory)
+    returns (bytes32[] memory)
   {
-    string memory output = "";
-    for (uint i = 0; i < message[msg.sender].length; i++) {
-      string memory _message = message[msg.sender][i];
-      output = string(abi.encodePacked(output, "[", _message, "]"));
-    }
-    return output;
+    return message[msg.sender];
   }
 
   /**
@@ -437,11 +455,11 @@ contract CreditReport {
   function _report(address consumer)
     internal
     view
-    returns (string memory)
+    returns (bytes32)
   {
-    string memory output;
+    bytes32 output;
     for (uint i = 0; i < reports[consumer].length; i++) {
-      output = string(abi.encodePacked(
+      output = keccak256(abi.encodePacked(
         output, "[",
           reports[consumer][i].subscriber, ",",
           reports[consumer][i].item, ",",
@@ -449,5 +467,21 @@ contract CreditReport {
       ));
     }
     return output;
+  }
+
+  function _reportItem(address consumer, uint index)
+    internal
+    view
+    returns (bytes memory)
+  {
+    return reports[consumer][index].item;
+  }
+
+  function _reportItemsTotal(address consumer)
+    internal
+    view
+    returns (uint)
+  {
+    return reports[consumer].length;
   }
 }
